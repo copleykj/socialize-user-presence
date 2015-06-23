@@ -37,4 +37,12 @@ This package provides some extensions onto the User class which comes with socia
 
 `User.prototype.setStatusIdle()` - Set the current logged in user for this session to idle.
 
+```javascript
+Meteor.user().setStatusIdle();
+```
+
 `User.prototype.setStatusOnline()` - Set the current logged in user for this session to online.
+
+```javascript
+Meteor.user.setStatusOnline();
+```
