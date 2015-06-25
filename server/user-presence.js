@@ -6,8 +6,39 @@ var cleanupFunctions = [];
 var userOnlineFunctions = [];
 var userOfflineFunctions = [];
 var userIdleFunctions = [];
+var sessionConnectedFunctions = [];
+var sessionDisconnectedFunctions = [];
 
 UserPresence = {};
+
+UserPresence.onSessionConnected = function (sessionConnectedFunction){
+    if(_.isFunction(sessionConnectedFunction)){
+        sessionConnectedFunctions.push(sessionConnectedFunction);
+    }else{
+        throw new Meteor.Error("Not A Function", "UserPresence.onSessionConnected requires function as parameter");
+    }
+};
+
+var sessionConnected = function(sessionId, userId) {
+    _.each(sessionConnectedFunctions, function(sessionFunction){
+        sessionFunction(userId);
+    });
+};
+
+UserPresence.onSessionDisconnected = function (sessionDisconnectedFunction){
+    if(_.isFunction(sessionDisconnectedFunction)){
+        sessionDisconnectedFunctions.push(sessionDisconnectedFunction);
+    }else{
+        throw new Meteor.Error("Not A Function", "UserPresence.onSessionDisconnected requires function as parameter");
+    }
+};
+
+var sessionDisconnected = function(sessionId, userId) {
+    _.each(sessionDisconnectedFunctions, function(sessionFunction){
+        sessionFunction(userId);
+    });
+};
+
 
 UserPresence.onUserOnline = function(userOnlineFunction) {
     if(_.isFunction(userOnlineFunction)){
@@ -80,11 +111,13 @@ ServerPresence.onCleanup(function(serverId){
 
 userConnected = function (userId, serverId, sessionId) {
     UserSessions.insert({serverId:serverId, userId:userId, _id:sessionId, status:2});
+    sessionConnected(sessionId, userId);
     determineStatus(userId);
 };
 
 userDisconnected = function (sessionId, userId) {
     UserSessions.remove(sessionId);
+    sessionDisconnected(sessionId, userId);
     determineStatus(userId);
 };
 
