@@ -19,9 +19,9 @@ UserPresence.onSessionConnected = function (sessionConnectedFunction){
     }
 };
 
-var sessionConnected = function(sessionId, userId) {
+var sessionConnected = function(connection, userId) {
     _.each(sessionConnectedFunctions, function(sessionFunction){
-        sessionFunction(userId);
+        sessionFunction(userId, connection);
     });
 };
 
@@ -33,9 +33,9 @@ UserPresence.onSessionDisconnected = function (sessionDisconnectedFunction){
     }
 };
 
-var sessionDisconnected = function(sessionId, userId) {
+var sessionDisconnected = function(connection, userId) {
     _.each(sessionDisconnectedFunctions, function(sessionFunction){
-        sessionFunction(userId);
+        sessionFunction(userId, connection);
     });
 };
 
@@ -48,9 +48,9 @@ UserPresence.onUserOnline = function(userOnlineFunction) {
     }
 };
 
-var userOnline = function(userId) {
+var userOnline = function(userId, connection) {
     _.each(userOnlineFunctions, function(onlineFunction){
-        onlineFunction(userId);
+        onlineFunction(userId, connection);
     });
 };
 
@@ -62,9 +62,9 @@ UserPresence.onUserIdle = function(userIdleFunction) {
     }
 };
 
-var userIdle = function(userId) {
+var userIdle = function(userId, connection) {
     _.each(userIdleFunctions, function(idleFunction){
-        idleFunction(userId);
+        idleFunction(userId, connection);
     });
 };
 
@@ -76,9 +76,9 @@ UserPresence.onUserOffline = function(userOfflineFunction) {
     }
 };
 
-var userOffline = function(userId) {
+var userOffline = function(userId, connection) {
     _.each(userOfflineFunctions, function(offlineFunction){
-        offlineFunction(userId);
+        offlineFunction(userId, connection);
     });
 };
 
@@ -109,19 +109,19 @@ ServerPresence.onCleanup(function(serverId){
     }
 });
 
-userConnected = function (userId, serverId, sessionId) {
-    UserSessions.insert({serverId:serverId, userId:userId, _id:sessionId, status:2});
-    sessionConnected(sessionId, userId);
-    determineStatus(userId);
+userConnected = function (userId, serverId, connection) {
+    UserSessions.insert({serverId:serverId, userId:userId, _id:connection.id, status:2});
+    sessionConnected(connection, userId);
+    determineStatus(userId, connection);
 };
 
-userDisconnected = function (sessionId, userId) {
-    UserSessions.remove(sessionId);
-    sessionDisconnected(sessionId, userId);
-    determineStatus(userId);
+userDisconnected = function (connection, userId) {
+    UserSessions.remove(connection.id);
+    sessionDisconnected(connection, userId);
+    determineStatus(userId, connection);
 };
 
-var determineStatus = function(userId) {
+var determineStatus = function(userId, connection) {
     var status = 0;
     var sessions = UserSessions.find({userId:userId}, {fields:{status:true}});
     var sessionCount = sessions.fetch().length;
@@ -137,13 +137,13 @@ var determineStatus = function(userId) {
 
     switch(status){
         case 0:
-            userOffline(userId);
+            userOffline(userId, connection);
             break;
         case 1:
-            userIdle(userId);
+            userIdle(userId, connection);
             break;
         case 2:
-            userOnline(userId);
+            userOnline(userId, connection);
             break;
     }
 };

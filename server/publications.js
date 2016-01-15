@@ -1,11 +1,11 @@
 Meteor.publish(null, function(){
     var self = this;
     if(self.userId && self.connection){
-        userConnected(self.userId, ServerPresence.serverId(), self.connection.id);
+        userConnected(self.userId, ServerPresence.serverId(), self.connection);
 
 
         self.onStop(function(){
-            userDisconnected(self.connection.id, self.userId);
+            userDisconnected(self.connection, self.userId);
         });
     }
     self.ready();

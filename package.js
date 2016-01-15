@@ -8,7 +8,8 @@ Package.describe({
 Package.onUse(function(api) {
     api.versionsFrom('1.0.2.1');
     api.use(['mongo', 'underscore']);
-    api.use(['socialize:server-presence@0.1.0', 'socialize:user-model@0.1.4']);
+    api.use('socialize:server-presence@0.1.0');
+    api.use('socialize:user-model@0.1.4', ['server', 'client'], {weak:true});
 
     api.addFiles('common/collection.js');
 
