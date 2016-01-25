@@ -19,9 +19,9 @@ UserPresence.onSessionConnected = function (sessionConnectedFunction){
     }
 };
 
-var sessionConnected = function(sessionId, userId) {
+sessionConnected = function(connection) {
     _.each(sessionConnectedFunctions, function(sessionFunction){
-        sessionFunction(userId);
+        sessionFunction(connection);
     });
 };
 
@@ -33,9 +33,9 @@ UserPresence.onSessionDisconnected = function (sessionDisconnectedFunction){
     }
 };
 
-var sessionDisconnected = function(sessionId, userId) {
+var sessionDisconnected = function(connection) {
     _.each(sessionDisconnectedFunctions, function(sessionFunction){
-        sessionFunction(userId);
+        sessionFunction(connection);
     });
 };
 
@@ -107,19 +107,19 @@ ServerPresence.onCleanup(function(serverId){
     }
 });
 
-userConnected = function (userId, serverId, sessionId) {
+userConnected = function (sessionId, userId, serverId, connection) {
+    sessionConnected(connection);
     UserSessions.insert({serverId:serverId, userId:userId, _id:sessionId, status:2});
-    sessionConnected(sessionId, userId);
-    determineStatus(userId);
+    determineStatus(userId, connection);
 };
 
-userDisconnected = function (sessionId, userId) {
+userDisconnected = function (sessionId, userId, connection) {
+    sessionDisconnected(connection);
     UserSessions.remove(sessionId);
-    sessionDisconnected(sessionId, userId);
-    determineStatus(userId);
+    determineStatus(userId, connection);
 };
 
-var determineStatus = function(userId) {
+var determineStatus = function(userId, connection) {
     var status = 0;
     var sessions = UserSessions.find({userId:userId}, {fields:{status:true}});
     var sessionCount = sessions.fetch().length;
@@ -135,13 +135,13 @@ var determineStatus = function(userId) {
 
     switch(status){
         case 0:
-            userOffline(userId);
+            userOffline(userId, connection);
             break;
         case 1:
-            userIdle(userId);
+            userIdle(userId, connection);
             break;
         case 2:
-            userOnline(userId);
+            userOnline(userId, connection);
             break;
     }
 };
