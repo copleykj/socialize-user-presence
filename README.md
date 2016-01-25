@@ -39,7 +39,7 @@ UserPresence.onCleanup(function(sessionIds){
 
 ```javascript
 UserPresence.onUserOnline(function(userId, connection){
-    Meteor.users.update({userId:userId}, {$set:{status:"online"}})
+    Meteor.profiles.update({userId:userId}, {$set:{status:"online"}})
 });
 ```
 
@@ -47,7 +47,7 @@ UserPresence.onUserOnline(function(userId, connection){
 
 ```javascript
 UserPresence.onUserIdle(function(userId, connection){
-    Meteor.users.update({userId:userId}, {$set:{status:"idle"}})
+    Meteor.profiles.update({userId:userId}, {$set:{status:"idle"}})
 });
 ```
 
@@ -55,13 +55,13 @@ UserPresence.onUserIdle(function(userId, connection){
 
 ```javascript
 UserPresence.onUserOffline(function(userId, connection){
-    Meteor.users.update({userId:userId}, {$unset:{status:true}})
+    Meteor.profiles.update({userId:userId}, {$unset:{status:true}})
 });
 ```
 
 ## User Extensions ##
 
-This package provides some extensions onto the User class which comes with socialize:user-model for your convenience.  Add the package socialize:user-model to enable these.
+This package provides some extensions onto the User class which comes with socialize:user-model for your convenience.
 
 `User.prototype.setStatusIdle()` - Set the current logged in user for this session to idle.
 
@@ -72,5 +72,5 @@ Meteor.user().setStatusIdle();
 `User.prototype.setStatusOnline()` - Set the current logged in user for this session to online.
 
 ```javascript
-Meteor.user().setStatusOnline();
+Meteor.user.setStatusOnline();
 ```
