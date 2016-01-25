@@ -48,9 +48,9 @@ UserPresence.onUserOnline = function(userOnlineFunction) {
     }
 };
 
-var userOnline = function(userId) {
+var userOnline = function(userId, connection) {
     _.each(userOnlineFunctions, function(onlineFunction){
-        onlineFunction(userId);
+        onlineFunction(userId, connection);
     });
 };
 
@@ -62,9 +62,9 @@ UserPresence.onUserIdle = function(userIdleFunction) {
     }
 };
 
-var userIdle = function(userId) {
+var userIdle = function(userId, connection) {
     _.each(userIdleFunctions, function(idleFunction){
-        idleFunction(userId);
+        idleFunction(userId, connection);
     });
 };
 
@@ -76,9 +76,9 @@ UserPresence.onUserOffline = function(userOfflineFunction) {
     }
 };
 
-var userOffline = function(userId) {
+var userOffline = function(userId, connection) {
     _.each(userOfflineFunctions, function(offlineFunction){
-        offlineFunction(userId);
+        offlineFunction(userId, connection);
     });
 };
 
