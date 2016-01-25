@@ -99,7 +99,7 @@ var cleanup = function() {
 ServerPresence.onCleanup(function(serverId){
     if(serverId){
         UserSessions.find({serverId:serverId}, {fields:{userId:true}}).map(function(session){
-            userDisconnected(session.id, session.userId, null);
+            userDisconnected(session._id, session.userId, null);
         });
     }else{
         cleanup();
