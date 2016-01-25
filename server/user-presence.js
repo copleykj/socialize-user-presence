@@ -90,19 +90,17 @@ UserPresence.onCleanup = function(cleanupFunction){
     }
 };
 
-var cleanup = function(sessions) {
+var cleanup = function() {
     _.each(cleanupFunctions, function(cleanupFunction){
-        cleanupFunction(sessions);
+        cleanupFunction();
     });
 };
 
 ServerPresence.onCleanup(function(serverId){
     if(serverId){
-        var sessionIds = UserSessions.find({serverId:serverId}, {fields:{sessionId:true}}).map(function(session){
-            return session.sessionId;
+        UserSessions.find({serverId:serverId}, {fields:{userId:true}}).map(function(session){
+            userDisconnected(session.id, session.userId, null);
         });
-        cleanup(sessionIds);
-        UserSessions.remove({serverId:serverId});
     }else{
         cleanup();
         UserSessions.remove({});
