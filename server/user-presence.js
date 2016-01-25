@@ -33,7 +33,7 @@ UserPresence.onSessionDisconnected = function (sessionDisconnectedFunction){
     }
 };
 
-var sessionDisconnected = function(connection) {
+sessionDisconnected = function(connection) {
     _.each(sessionDisconnectedFunctions, function(sessionFunction){
         sessionFunction(connection);
     });
@@ -108,13 +108,11 @@ ServerPresence.onCleanup(function(serverId){
 });
 
 userConnected = function (sessionId, userId, serverId, connection) {
-    sessionConnected(connection);
     UserSessions.insert({serverId:serverId, userId:userId, _id:sessionId, status:2});
     determineStatus(userId, connection);
 };
 
 userDisconnected = function (sessionId, userId, connection) {
-    sessionDisconnected(connection);
     UserSessions.remove(sessionId);
     determineStatus(userId, connection);
 };
