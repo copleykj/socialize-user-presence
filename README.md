@@ -5,37 +5,33 @@ This package is a simple, scalable package for keeping track of if your users ar
 
 ## Server API ##
 
-The server side API consists of three methods which register callbacks to run when a users presence changes. A user is considered online if any session is set to online, idle if all sessions are set to idle, or offline if there are no current sessions for the user.
+The server side API consists of methods which register callbacks to run when a users presence changes. A user is considered online if any session is set to online, idle if all sessions are set to idle, or offline if there are no current sessions for the user.
 
-`UserPresence.onSessionConnected(Fn(sessionId, userId))` - register a callback to run each time a logged in user makes a connection to the server.
+`UserPresence.onSessionConnected(Fn(connection))` - register a callback to run each time a logged in user makes a connection to the server.
 
 ```javascript
-UserPresence.onSessionConnected(function(sessionId, userId){
-    Sessions.insert({_id:sessionId, userId:userId});
+UserPresence.onSessionConnected(function(connection){
+    Sessions.insert({_id:connection.id, userId:connection.userId});
 });
 ```
 
-`UserPresence.onSessionDisconnected(Fn(sessionId, userId))` - register a callback to run each time a logged in user breaks connection to the server.
+`UserPresence.onSessionDisconnected(Fn(connection))` - register a callback to run each time a logged in user breaks connection to the server.
 
 ```javascript
-UserPresence.onSessionDisconnected(function(sessionId, userId){
-    Sessions.remove(sessionId);
+UserPresence.onSessionDisconnected(function(connection){
+    Sessions.remove(connection.id);
 });
 ```
 
-`UserPresence.onCleanup(Fn(sessionIds))` - register a callback to run when your application starts fresh or an application instance goes offline. In the even of a fresh start the `sessionIds` parameter will be empty and you should run code for a full cleanup. When a single application instance goes offline, the `sessionIds` parameter will be populated with an array of ids for sessions that were connected to the server that went offline.
+`UserPresence.onCleanup(Fn())` - register a callback to run when your application starts fresh without any other instances running. T
 
 ```javascript
-UserPresence.onCleanup(function(sessionIds){
-    if(sessionIds){
-        Sessions.remove({_id:{$in:sessionIds}});
-    }else{
-        Sessions.remove({});
-    }
+UserPresence.onCleanup(function(){
+    Meteor.users.update({}, {$unset:{status:true}}, {multi:true});
 });
 ```
 
-`UserPresence.onUserOnline(Fn(userId))` - register a callback to run when the users status is "Online" (Any one session is online)
+`UserPresence.onUserOnline(Fn(userId, connection))` - register a callback to run when the users status is "Online" (Any one session is online). 
 
 ```javascript
 UserPresence.onUserOnline(function(userId){
@@ -43,7 +39,7 @@ UserPresence.onUserOnline(function(userId){
 });
 ```
 
-`UserPresence.onUserIdle(Fn(userId))` - register a callback to run when the users status is "Idle" (All sessions are idle)
+`UserPresence.onUserIdle(Fn(userId, connection))` - register a callback to run when the users status is "Idle" (All sessions are idle)
 
 ```javascript
 UserPresence.onUserIdle(function(userId){
@@ -51,7 +47,7 @@ UserPresence.onUserIdle(function(userId){
 });
 ```
 
-`UserPresence.onUserOffline(Fn(userId))` - register a callback to run when the users status is "Offline" (No connected sessions)
+`UserPresence.onUserOffline(Fn(userId, connection))` - register a callback to run when the users status is "Offline" (No connected sessions)
 
 ```javascript
 UserPresence.onUserOffline(function(userId){
