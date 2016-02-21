@@ -9,7 +9,7 @@ Package.onUse(function(api) {
     api.versionsFrom('1.0.2.1');
     api.use(['mongo', 'underscore']);
     api.use('socialize:server-presence@0.1.3');
-    api.use('socialize:user-model@0.1.4', ['server', 'client'], {weak:true});
+    api.use('socialize:user-model@0.1.6', ['server', 'client'], {weak:true});
 
     api.addFiles('common/collection.js');
 
