@@ -1,7 +1,7 @@
 Package.describe({
     name: 'socialize:user-presence',
     summary: 'Scalable user presence',
-    version: '0.3.3',
+    version: '0.3.4',
     git: 'https://github.com/copleykj/socialize-user-presence.git'
 });
 
@@ -9,7 +9,7 @@ Package.onUse(function(api) {
     api.versionsFrom('1.0.2.1');
     api.use(['mongo', 'underscore']);
     api.use('socialize:server-presence@0.1.3');
-    api.use('socialize:user-model@0.1.6', ['server', 'client'], {weak:true});
+    api.use('socialize:user-model@0.1.7', ['server', 'client'], {weak:true});
 
     api.addFiles('common/collection.js');
 
