@@ -117,7 +117,7 @@ userDisconnected = function (sessionId, userId, connection) {
     determineStatus(userId, connection);
 };
 
-var determineStatus = function(userId, connection) {
+determineStatus = function(userId, connection) {
     var status = 0;
     var sessions = UserSessions.find({userId:userId}, {fields:{status:true}});
     var sessionCount = sessions.fetch().length;
