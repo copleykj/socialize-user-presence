@@ -1,145 +1,157 @@
-UserSessions._ensureIndex({userId:1});
-UserSessions._ensureIndex({serverId:1});
-UserSessions._ensureIndex({sessionId:1});
+/* eslint-disable import/no-unresolved */
+import { Meteor } from 'meteor/meteor';
+import { _ } from 'meteor/underscore';
+import { ServerPresence } from 'meteor/socialize:server-presence';
 
-var cleanupFunctions = [];
-var userOnlineFunctions = [];
-var userOfflineFunctions = [];
-var userIdleFunctions = [];
-var sessionConnectedFunctions = [];
-var sessionDisconnectedFunctions = [];
+/* eslint-enable import/no-unresolved */
 
-UserPresence = {};
+import { UserSessions } from '../common/collection.js';
 
-UserPresence.onSessionConnected = function (sessionConnectedFunction){
-    if(_.isFunction(sessionConnectedFunction)){
+UserSessions._ensureIndex({ userId: 1 });
+UserSessions._ensureIndex({ serverId: 1 });
+UserSessions._ensureIndex({ sessionId: 1 });
+
+const cleanupFunctions = [];
+const userOnlineFunctions = [];
+const userOfflineFunctions = [];
+const userIdleFunctions = [];
+const sessionConnectedFunctions = [];
+const sessionDisconnectedFunctions = [];
+
+/* eslint-disable import/prefer-default-export */
+export const UserPresence = {};
+
+UserPresence.onSessionConnected = (sessionConnectedFunction) => {
+    if (_.isFunction(sessionConnectedFunction)) {
         sessionConnectedFunctions.push(sessionConnectedFunction);
-    }else{
-        throw new Meteor.Error("Not A Function", "UserPresence.onSessionConnected requires function as parameter");
+    } else {
+        throw new Meteor.Error('Not A Function', 'UserPresence.onSessionConnected requires function as parameter');
     }
 };
 
-sessionConnected = function(connection) {
-    _.each(sessionConnectedFunctions, function(sessionFunction){
+export const sessionConnected = (connection) => {
+    _.each(sessionConnectedFunctions, (sessionFunction) => {
         sessionFunction(connection);
     });
 };
 
-UserPresence.onSessionDisconnected = function (sessionDisconnectedFunction){
-    if(_.isFunction(sessionDisconnectedFunction)){
+UserPresence.onSessionDisconnected = (sessionDisconnectedFunction) => {
+    if (_.isFunction(sessionDisconnectedFunction)) {
         sessionDisconnectedFunctions.push(sessionDisconnectedFunction);
-    }else{
-        throw new Meteor.Error("Not A Function", "UserPresence.onSessionDisconnected requires function as parameter");
+    } else {
+        throw new Meteor.Error('Not A Function', 'UserPresence.onSessionDisconnected requires function as parameter');
     }
 };
 
-sessionDisconnected = function(connection) {
-    _.each(sessionDisconnectedFunctions, function(sessionFunction){
+export const sessionDisconnected = (connection) => {
+    _.each(sessionDisconnectedFunctions, (sessionFunction) => {
         sessionFunction(connection);
     });
 };
 
 
-UserPresence.onUserOnline = function(userOnlineFunction) {
-    if(_.isFunction(userOnlineFunction)){
+UserPresence.onUserOnline = (userOnlineFunction) => {
+    if (_.isFunction(userOnlineFunction)) {
         userOnlineFunctions.push(userOnlineFunction);
-    }else{
-        throw new Meteor.Error("Not A Function", "UserPresence.onUserOnline requires function as parameter");
+    } else {
+        throw new Meteor.Error('Not A Function', 'UserPresence.onUserOnline requires function as parameter');
     }
 };
 
-var userOnline = function(userId, connection) {
-    _.each(userOnlineFunctions, function(onlineFunction){
+const userOnline = (userId, connection) => {
+    _.each(userOnlineFunctions, (onlineFunction) => {
         onlineFunction(userId, connection);
     });
 };
 
-UserPresence.onUserIdle = function(userIdleFunction) {
-    if(_.isFunction(userIdleFunction)){
+UserPresence.onUserIdle = (userIdleFunction) => {
+    if (_.isFunction(userIdleFunction)) {
         userIdleFunctions.push(userIdleFunction);
-    }else{
-        throw new Meteor.Error("Not A Function", "UserPresence.onUserIdle requires function as parameter");
+    } else {
+        throw new Meteor.Error('Not A Function', 'UserPresence.onUserIdle requires function as parameter');
     }
 };
 
-var userIdle = function(userId, connection) {
-    _.each(userIdleFunctions, function(idleFunction){
+const userIdle = (userId, connection) => {
+    _.each(userIdleFunctions, (idleFunction) => {
         idleFunction(userId, connection);
     });
 };
 
-UserPresence.onUserOffline = function(userOfflineFunction) {
-    if(_.isFunction(userOfflineFunction)){
+UserPresence.onUserOffline = (userOfflineFunction) => {
+    if (_.isFunction(userOfflineFunction)) {
         userOfflineFunctions.push(userOfflineFunction);
-    }else{
-        throw new Meteor.Error("Not A Function", "UserPresence.onUserOffline requires function as parameter");
+    } else {
+        throw new Meteor.Error('Not A Function', 'UserPresence.onUserOffline requires function as parameter');
     }
 };
 
-var userOffline = function(userId, connection) {
-    _.each(userOfflineFunctions, function(offlineFunction){
+const userOffline = (userId, connection) => {
+    _.each(userOfflineFunctions, (offlineFunction) => {
         offlineFunction(userId, connection);
     });
 };
 
-UserPresence.onCleanup = function(cleanupFunction){
-    if(_.isFunction(cleanupFunction)){
-        cleanupFunctions.push(cleanupFunction);
-    }else{
-        throw new Meteor.Error("Not A Function", "UserPresence.onCleanup requires function as parameter");
-    }
-};
+export const determineStatus = (userId, connection) => {
+    let status = 0;
+    const sessions = UserSessions.find({ userId }, { fields: { status: true } });
+    const sessionCount = sessions.fetch().length;
 
-var cleanup = function() {
-    _.each(cleanupFunctions, function(cleanupFunction){
-        cleanupFunction();
-    });
-};
-
-ServerPresence.onCleanup(function(serverId){
-    if(serverId){
-        UserSessions.find({serverId:serverId}, {fields:{userId:true}}).map(function(session){
-            userDisconnected(session._id, session.userId, null);
-        });
-    }else{
-        cleanup();
-        UserSessions.remove({});
-    }
-});
-
-userConnected = function (sessionId, userId, serverId, connection) {
-    UserSessions.insert({serverId:serverId, userId:userId, _id:sessionId, status:2});
-    determineStatus(userId, connection);
-};
-
-userDisconnected = function (sessionId, userId, connection) {
-    UserSessions.remove(sessionId);
-    determineStatus(userId, connection);
-};
-
-determineStatus = function(userId, connection) {
-    var status = 0;
-    var sessions = UserSessions.find({userId:userId}, {fields:{status:true}});
-    var sessionCount = sessions.fetch().length;
-
-    if(sessionCount > 0){
+    if (sessionCount > 0) {
         status = 1;
-        sessions.forEach(function(session){
-            if(session.status === 2){
+        sessions.forEach((session) => {
+            if (session.status === 2) {
                 status = 2;
             }
         });
     }
 
-    switch(status){
-        case 0:
-            userOffline(userId, connection);
-            break;
+    switch (status) {
         case 1:
             userIdle(userId, connection);
             break;
         case 2:
             userOnline(userId, connection);
             break;
+        default:
+            userOffline(userId, connection);
+            break;
     }
 };
+
+export const userConnected = (sessionId, userId, serverId, connection) => {
+    UserSessions.insert({ serverId, userId, _id: sessionId, status: 2 });
+    determineStatus(userId, connection);
+};
+
+export const userDisconnected = (sessionId, userId, connection) => {
+    UserSessions.remove(sessionId);
+    determineStatus(userId, connection);
+};
+
+
+UserPresence.onCleanup = (cleanupFunction) => {
+    if (_.isFunction(cleanupFunction)) {
+        cleanupFunctions.push(cleanupFunction);
+    } else {
+        throw new Meteor.Error('Not A Function', 'UserPresence.onCleanup requires function as parameter');
+    }
+};
+
+const cleanup = () => {
+    _.each(cleanupFunctions, (cleanupFunction) => {
+        cleanupFunction();
+    });
+};
+
+ServerPresence.onCleanup((serverId) => {
+    if (serverId) {
+        UserSessions.find({ serverId }, { fields: { userId: true } }).map((session) => {
+            userDisconnected(session._id, session.userId, null);
+            return undefined;
+        });
+    } else {
+        cleanup();
+        UserSessions.remove({});
+    }
+});

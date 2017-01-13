@@ -1,9 +1,14 @@
-if (Package['socialize:user-model']) {
-  User.prototype.setStatusIdle = function() {
-      Meteor.call('updateSessionStatus', 1);
-  };
+/* eslint-disable import/no-unresolved */
+import { Meteor } from 'meteor/meteor';
+import { User } from 'meteor/socialize:user-model';
 
-  User.prototype.setStatusOnline = function() {
-      Meteor.call('updateSessionStatus', 2);
-  };
-}
+/* eslint-enable import/no-unresolved */
+
+User.methods({
+    setStatusIdle() {
+        Meteor.call('updateSessionStatus', 1);
+    },
+    setStatusOnline() {
+        Meteor.call('updateSessionStatus', 2);
+    },
+});
