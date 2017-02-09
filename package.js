@@ -16,4 +16,5 @@ Package.onUse(function(api) {
     api.addFiles(['server/publications.js', 'server/user-presence.js', 'server/server.js'], 'server');
 
     api.export('UserPresence', 'server');
+    api.export('UserSessions');
 });
