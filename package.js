@@ -8,7 +8,7 @@ Package.describe({
 
 Package.onUse(function _(api) {
     api.versionsFrom('1.3');
-    api.use(['mongo', 'underscore']);
+    api.use(['mongo']);
     api.use(['socialize:server-presence@1.0.0', 'socialize:user-model@1.0.0']);
 
     api.mainModule('server/server.js', 'server');
