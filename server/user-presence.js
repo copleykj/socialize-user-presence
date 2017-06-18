@@ -17,7 +17,8 @@ const userIdleFunctions = [];
 const sessionConnectedFunctions = [];
 const sessionDisconnectedFunctions = [];
 
-const UserPresence = {};
+/* eslint-disable import/prefer-default-export */
+export const UserPresence = {};
 
 UserPresence.onSessionConnected = (sessionConnectedFunction) => {
     if (typeof sessionConnectedFunction === 'function') {
@@ -154,6 +155,3 @@ ServerPresence.onCleanup((serverId) => {
         UserSessions.remove({});
     }
 });
-
-/* eslint-disable import/prefer-default-export */
-export default UserPresence;
