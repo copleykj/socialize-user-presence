@@ -2,6 +2,11 @@
 
 This package is a simple, scalable package for keeping track of if your users are online, idle, or offline. While other packages exist that do this same thing, most of them fall flat when it comes to scalability and they lock you into keeping the status data on the profile key of the user record. This package cleans up neatly after an app instance dies and lets you configure what actions to take when the users presence changes state.
 
+## Supporting the Project ##
+In the spirit of keeping this and all of the packages in the [Socialize](https://atmospherejs.com/socialize) set alive, I ask that if you find this package useful, please donate to it's development.
+
+[Bitcoin](https://www.coinbase.com/checkouts/4a52f56a76e565c552b6ecf118461287) / [Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
+
 
 ## Server API ##
 
@@ -31,7 +36,7 @@ UserPresence.onCleanup(function(){
 });
 ```
 
-`UserPresence.onUserOnline(Fn(userId, connection))` - register a callback to run when the users status is "Online" (Any one session is online). 
+`UserPresence.onUserOnline(Fn(userId, connection))` - register a callback to run when the users status is "Online" (Any one session is online).
 
 ```javascript
 UserPresence.onUserOnline(function(userId){
