@@ -1,4 +1,4 @@
-/* eslint-disable no-undef */
+/* global Package */
 Package.describe({
     name: 'socialize:user-presence',
     summary: 'Scalable user presence',
