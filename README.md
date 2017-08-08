@@ -8,6 +8,13 @@ In the spirit of keeping this and all of the packages in the [Socialize](https:/
 [Bitcoin](https://www.coinbase.com/checkouts/4a52f56a76e565c552b6ecf118461287) / [Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
 
 
+## Installation ##
+
+```shell
+meteor add socialize:user-presence
+```
+
+
 ## Server API ##
 
 The server side API consists of methods which register callbacks to run when a users presence changes. A user is considered online if any session is set to online, idle if all sessions are set to idle, or offline if there are no current sessions for the user.
