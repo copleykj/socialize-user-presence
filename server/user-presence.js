@@ -138,18 +138,19 @@ UserPresence.onCleanup = (cleanupFunction) => {
     }
 };
 
-const cleanup = () => {
+const cleanup = (sessionIds) => {
     _.each(cleanupFunctions, (cleanupFunction) => {
-        cleanupFunction();
+        cleanupFunction(sessionIds);
     });
 };
 
 ServerPresence.onCleanup((serverId) => {
     if (serverId) {
-        UserSessions.find({ serverId }, { fields: { userId: true } }).map((session) => {
+        const sessionIds = UserSessions.find({ serverId }, { fields: { userId: true } }).map((session) => {
             userDisconnected(session._id, session.userId, null);
-            return undefined;
+            return session._id;
         });
+        cleanup(sessionIds);
     } else {
         cleanup();
         UserSessions.remove({});
