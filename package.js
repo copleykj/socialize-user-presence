@@ -11,6 +11,8 @@ Package.onUse(function _(api) {
     api.use(['mongo']);
     api.use(['socialize:server-presence@1.0.0', 'socialize:user-model@1.0.0']);
 
+    api.imply('socialize:user-model');
+
     api.mainModule('server/server.js', 'server');
     api.mainModule('common/common.js', 'client');
 });
