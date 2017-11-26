@@ -20,7 +20,7 @@ const sessionDisconnectedFunctions = [];
 const UserPresence = {};
 
 UserPresence.onSessionConnected = (sessionConnectedFunction) => {
-    if ('function' === typeof sessionConnectedFunction) {
+    if (typeof sessionConnectedFunction === 'function') {
         sessionConnectedFunctions.push(sessionConnectedFunction);
     } else {
         throw new Meteor.Error('Not A Function', 'UserPresence.onSessionConnected requires function as parameter');
@@ -34,7 +34,7 @@ export const sessionConnected = (connection) => {
 };
 
 UserPresence.onSessionDisconnected = (sessionDisconnectedFunction) => {
-    if ('function' === typeof sessionDisconnectedFunction) {
+    if (typeof sessionDisconnectedFunction === 'function') {
         sessionDisconnectedFunctions.push(sessionDisconnectedFunction);
     } else {
         throw new Meteor.Error('Not A Function', 'UserPresence.onSessionDisconnected requires function as parameter');
@@ -49,7 +49,7 @@ export const sessionDisconnected = (connection) => {
 
 
 UserPresence.onUserOnline = (userOnlineFunction) => {
-    if ('function' === typeof userOnlineFunction) {
+    if (typeof userOnlineFunction === 'function') {
         userOnlineFunctions.push(userOnlineFunction);
     } else {
         throw new Meteor.Error('Not A Function', 'UserPresence.onUserOnline requires function as parameter');
@@ -63,7 +63,7 @@ const userOnline = (userId, connection) => {
 };
 
 UserPresence.onUserIdle = (userIdleFunction) => {
-    if ('function' === typeof userIdleFunction) {
+    if (typeof userIdleFunction === 'function') {
         userIdleFunctions.push(userIdleFunction);
     } else {
         throw new Meteor.Error('Not A Function', 'UserPresence.onUserIdle requires function as parameter');
@@ -77,7 +77,7 @@ const userIdle = (userId, connection) => {
 };
 
 UserPresence.onUserOffline = (userOfflineFunction) => {
-    if ('function' === typeof userOfflineFunction) {
+    if (typeof userOfflineFunction === 'function') {
         userOfflineFunctions.push(userOfflineFunction);
     } else {
         throw new Meteor.Error('Not A Function', 'UserPresence.onUserOffline requires function as parameter');
@@ -129,7 +129,7 @@ export const userDisconnected = (sessionId, userId, connection) => {
 
 
 UserPresence.onCleanup = (cleanupFunction) => {
-    if ('function' === typeof cleanupFunction) {
+    if (typeof cleanupFunction === 'function') {
         cleanupFunctions.push(cleanupFunction);
     } else {
         throw new Meteor.Error('Not A Function', 'UserPresence.onCleanup requires function as parameter');
