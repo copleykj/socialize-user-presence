@@ -3,7 +3,7 @@ import { Meteor } from 'meteor/meteor';
 
 /* eslint-enable import/no-unresolved */
 
-import { determineStatus, UserPresence } from './user-presence.js';
+import { UserPresence, determineStatus } from './user-presence.js';
 import { UserSessions } from '../common/collection.js';
 
 import './publications.js';
