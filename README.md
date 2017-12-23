@@ -23,7 +23,10 @@ The server side API consists of methods which register callbacks to run when a u
 
 ```javascript
 UserPresence.onSessionConnected(function (connection) {
-  UserSessions.insert({ _id: connection.id, userId: Meteor.userId() });
+  UserSessions.upsert(
+    { _id: connection.id, userId: Meteor.userId() },
+    { $set: { _id: connection.id, userId: Meteor.userId() }}
+  );
 });
 ```
 
