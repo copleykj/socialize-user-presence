@@ -96,7 +96,7 @@ UserPresence.onCleanup(function () {
 
 ```javascript
 UserPresence.onUserOnline(function (userId) {
-  ProfilesCollection.update({ userId }, { $set: { status: 'online' } });
+  ProfilesCollection.update({ _id: userId }, { $set: { status: 'online' } });
 });
 ```
 
@@ -104,7 +104,7 @@ UserPresence.onUserOnline(function (userId) {
 
 ```javascript
 UserPresence.onUserIdle(function (userId) {
-  ProfilesCollection.update({ userId }, { $set: { status: 'idle' } });
+  ProfilesCollection.update({ _id: userId }, { $set: { status: 'idle' } });
 });
 ```
 
@@ -112,7 +112,7 @@ UserPresence.onUserIdle(function (userId) {
 
 ```javascript
 UserPresence.onUserOffline(function (userId) {
-  ProfilesCollection.update({ userId }, { $unset: { status: true } });
+  ProfilesCollection.update({ _id: userId }, { $unset: { status: true } });
 });
 ```
 
