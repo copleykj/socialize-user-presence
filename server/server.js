@@ -21,4 +21,4 @@ Meteor.methods({
 });
 
 /* eslint-disable import/prefer-default-export */
-export { UserPresence };
+export { UserPresence, UserSessions };
