@@ -22,48 +22,48 @@ The server side API consists of methods which register callbacks to run when a u
 `UserPresence.onSessionConnected(Fn(connection))` - register a callback to run each time a logged in user makes a connection to the server.
 
 ```javascript
-UserPresence.onSessionConnected(function(connection){
-    Sessions.insert({_id:connection.id, userId:connection.userId});
+UserPresence.onSessionConnected(function (connection) {
+  UserSessions.insert({ _id: connection.id, userId: connection.userId });
 });
 ```
 
 `UserPresence.onSessionDisconnected(Fn(connection))` - register a callback to run each time a logged in user breaks connection to the server.
 
 ```javascript
-UserPresence.onSessionDisconnected(function(connection){
-    Sessions.remove(connection.id);
+UserPresence.onSessionDisconnected(function (connection) {
+  UserSessions.remove(connection.id);
 });
 ```
 
 `UserPresence.onCleanup(Fn())` - register a callback to run when your application starts fresh without any other instances running. T
 
 ```javascript
-UserPresence.onCleanup(function(){
-    Meteor.users.update({}, {$unset:{status:true}}, {multi:true});
+UserPresence.onCleanup(function () {
+  Meteor.users.update({}, { $unset: { status: true } }, { multi: true });
 });
 ```
 
 `UserPresence.onUserOnline(Fn(userId, connection))` - register a callback to run when the users status is "Online" (Any one session is online).
 
 ```javascript
-UserPresence.onUserOnline(function(userId){
-    Meteor.profiles.update({userId:userId}, {$set:{status:"online"}})
+UserPresence.onUserOnline(function (userId) {
+  ProfilesCollection.update({ userId }, { $set: { status: 'online' } });
 });
 ```
 
 `UserPresence.onUserIdle(Fn(userId, connection))` - register a callback to run when the users status is "Idle" (All sessions are idle)
 
 ```javascript
-UserPresence.onUserIdle(function(userId){
-    Meteor.profiles.update({userId:userId}, {$set:{status:"idle"}})
+UserPresence.onUserIdle(function (userId) {
+  ProfilesCollection.update({ userId }, { $set: { status: 'idle' } });
 });
 ```
 
 `UserPresence.onUserOffline(Fn(userId, connection))` - register a callback to run when the users status is "Offline" (No connected sessions)
 
 ```javascript
-UserPresence.onUserOffline(function(userId){
-    Meteor.profiles.update({userId:userId}, {$unset:{status:true}})
+UserPresence.onUserOffline(function (userId) {
+  ProfilesCollection.update({ userId }, { $unset: { status: true } });
 });
 ```
 
