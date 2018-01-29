@@ -19,15 +19,15 @@ meteor add socialize:user-presence
 
 The server side API consists of methods which register callbacks to run when a users presence changes. A user is considered online if any session is set to online, idle if all sessions are set to idle, or offline if there are no current sessions for the user.
 
-`UserPresence.onSessionConnected(Fn(connection))` - register a callback to run each time a logged in user makes a connection to the server.
+`UserPresence.onSessionConnected(Fn(connection, userId))` - register a callback to run each time a logged in user makes a connection to the server.
 
 ```javascript
-UserPresence.onSessionConnected(function(connection){
-    Sessions.insert({_id:connection.id, userId:connection.userId});
+UserPresence.onSessionConnected(function(connection, userId){
+    Sessions.insert({_id:connection.id, userId});
 });
 ```
 
-`UserPresence.onSessionDisconnected(Fn(connection))` - register a callback to run each time a logged in user breaks connection to the server.
+`UserPresence.onSessionDisconnected(Fn(connection, userId))` - register a callback to run each time a logged in user breaks connection to the server.
 
 ```javascript
 UserPresence.onSessionDisconnected(function(connection){

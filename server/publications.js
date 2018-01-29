@@ -9,11 +9,11 @@ import { userConnected, sessionConnected, userDisconnected, sessionDisconnected 
 Meteor.publish(null, function userPresenceSessionConnected() {
     if (this.userId && this.connection && this.connection.id) {
         userConnected(this.connection.id, this.userId, ServerPresence.serverId(), this.connection);
-        sessionConnected(this.connection);
+        sessionConnected(this.connection, this.userId);
 
         this.onStop(() => {
             userDisconnected(this.connection.id, this.userId, this.connection);
-            sessionDisconnected(this.connection);
+            sessionDisconnected(this.connection, this.userId);
         });
     }
     this.ready();
