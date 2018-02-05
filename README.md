@@ -71,8 +71,11 @@ The server side API consists of methods which register callbacks to run when a u
 `UserPresence.onSessionConnected(Fn(connection, userId))` - register a callback to run each time a logged in user makes a connection to the server.
 
 ```javascript
-UserPresence.onSessionConnected(function(connection, userId){
-    Sessions.insert({_id:connection.id, userId});
+UserPresence.onSessionConnected(function (connection) {
+  UserSessions.upsert(
+    { _id: connection.id, userId: Meteor.userId() },
+    { $set: { _id: connection.id, userId: Meteor.userId() }}
+  );
 });
 ```
 
@@ -96,7 +99,7 @@ UserPresence.onCleanup(function () {
 
 ```javascript
 UserPresence.onUserOnline(function (userId) {
-  ProfilesCollection.update({ userId }, { $set: { status: 'online' } });
+  ProfilesCollection.update({ _id: userId }, { $set: { status: 'online' } });
 });
 ```
 
@@ -104,7 +107,7 @@ UserPresence.onUserOnline(function (userId) {
 
 ```javascript
 UserPresence.onUserIdle(function (userId) {
-  ProfilesCollection.update({ userId }, { $set: { status: 'idle' } });
+  ProfilesCollection.update({ _id: userId }, { $set: { status: 'idle' } });
 });
 ```
 
@@ -112,7 +115,7 @@ UserPresence.onUserIdle(function (userId) {
 
 ```javascript
 UserPresence.onUserOffline(function (userId) {
-  ProfilesCollection.update({ userId }, { $unset: { status: true } });
+  ProfilesCollection.update({ _id: userId }, { $unset: { status: true } });
 });
 ```
 
