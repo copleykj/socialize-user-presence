@@ -28,9 +28,9 @@ UserPresence.onSessionConnected = (sessionConnectedFunction) => {
     }
 };
 
-export const sessionConnected = (connection) => {
+export const sessionConnected = (connection, userId) => {
     sessionConnectedFunctions.forEach((sessionFunction) => {
-        sessionFunction(connection);
+        sessionFunction(connection, userId);
     });
 };
 
@@ -42,9 +42,9 @@ UserPresence.onSessionDisconnected = (sessionDisconnectedFunction) => {
     }
 };
 
-export const sessionDisconnected = (connection) => {
+export const sessionDisconnected = (connection, userId) => {
     sessionDisconnectedFunctions.forEach((sessionFunction) => {
-        sessionFunction(connection);
+        sessionFunction(connection, userId);
     });
 };
 
