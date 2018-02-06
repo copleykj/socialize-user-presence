@@ -72,7 +72,7 @@ The server side API consists of methods which register callbacks to run when a u
 
 ```javascript
 UserPresence.onSessionConnected(function(connection, userId){
-    Sessions.insert({_id:connection.id, userId});
+    EventLogs.insert({eventType: 'user-connected', userId, connection});
 });
 ```
 
@@ -80,7 +80,7 @@ UserPresence.onSessionConnected(function(connection, userId){
 
 ```javascript
 UserPresence.onSessionDisconnected(function (connection, userId) {
-  UserSessions.remove(connection.id);
+    EventLogs.insert({eventType: 'user-disconnected', userId, connection});
 });
 ```
 
@@ -88,7 +88,7 @@ UserPresence.onSessionDisconnected(function (connection, userId) {
 
 ```javascript
 UserPresence.onCleanup(function () {
-  Meteor.users.update({}, { $unset: { status: true } }, { multi: true });
+    Meteor.users.update({}, { $unset: { status: true } }, { multi: true });
 });
 ```
 
@@ -96,7 +96,7 @@ UserPresence.onCleanup(function () {
 
 ```javascript
 UserPresence.onUserOnline(function (userId) {
-  ProfilesCollection.update({ _id: userId }, { $set: { status: 'online' } });
+    ProfilesCollection.update({ _id: userId }, { $set: { status: 'online' } });
 });
 ```
 
@@ -104,7 +104,7 @@ UserPresence.onUserOnline(function (userId) {
 
 ```javascript
 UserPresence.onUserIdle(function (userId) {
-  ProfilesCollection.update({ _id: userId }, { $set: { status: 'idle' } });
+    ProfilesCollection.update({ _id: userId }, { $set: { status: 'idle' } });
 });
 ```
 
@@ -112,7 +112,7 @@ UserPresence.onUserIdle(function (userId) {
 
 ```javascript
 UserPresence.onUserOffline(function (userId) {
-  ProfilesCollection.update({ _id: userId }, { $unset: { status: true } });
+    ProfilesCollection.update({ _id: userId }, { $unset: { status: true } });
 });
 ```
 
