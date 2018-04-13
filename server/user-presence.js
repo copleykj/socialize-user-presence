@@ -4,7 +4,7 @@ import { ServerPresence } from 'meteor/socialize:server-presence';
 
 /* eslint-enable import/no-unresolved */
 
-import { UserSessions } from '../common/collection.js';
+import { UserSessions } from '../common/common.js';
 
 UserSessions._ensureIndex({ userId: 1 });
 UserSessions._ensureIndex({ serverId: 1 });
