@@ -93,7 +93,7 @@ const userOffline = (userId, connection) => {
 
 export const determineStatus = (userId, connection) => {
     let status = 0;
-    const sessions = UserSessions.find({ userId }, { fields: { status: true } });
+    const sessions = UserSessions.find({ userId }, { fields: { status: 1 } });
     const sessionCount = sessions.fetch().length;
 
     if (sessionCount > 0) {
