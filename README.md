@@ -1,22 +1,38 @@
-# User Presence #
+# User Presence
 
 This package is a simple, scalable package for keeping track of if your users are online, idle, or offline. While other packages exist that do this same thing, most of them fall flat when it comes to scalability and they lock you into keeping the status data on the profile key of the user record. This package allows you to clean up neatly after an app instance dies and lets you configure what actions to take when the users presence changes state.
 
-## Supporting the Project ##
-In the spirit of keeping this and all of the packages in the [Socialize](https://atmospherejs.com/socialize) set alive, I ask that if you find this package useful, please donate to it's development.
+>This is a [Meteor][meteor] package with part of it's code published as a companion NPM package made to work with React Native. This allows your Meteor and React Native projects that use this package to share code between them to give you a competitive advantage when bringing your mobile and web application to market.
+
+## Supporting the Project
+In the spirit of keeping this and all of the packages in the [Socialize][socialize] set alive, I ask that if you find this package useful, please donate to it's development.
 
 Litecoin: LXLBD9sC5dV79eQkwj7tFusUHvJA5nhuD3 / [Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
 
 
-## Installation ##
-This package does not directly use the `simpl-schema` package, but it depend on the [socialize:user-model](https://github.com/copleykj/socialize-user-model) which uses it and so we need to make sure it's installed as well
+## Meteor Installation
+
+This package does not directly use the `simpl-schema` package, but it depend on the [socialize:user-model][user-model] which uses it and so we need to make sure it's installed as well
 
 ```shell
 $ meteor npm install --save simpl-schema
 $ meteor add socialize:user-presence
 ```
 
-## Basic Usage ##
+## React Native Installation
+
+When using this package with React Native, the dependency tree ensures that `simpl-schema` is loaded so there's no need to install it as when using within Meteor.
+
+```shell
+$ npm install --save @socialize/user-presence
+```
+> **Note**
+>
+>  When using with React Native, you'll need to connect to a server which hosts the server side Meteor code for your app using `Meteor.connect` as per the [@socialize/react-native-meteor](https://www.npmjs.com/package/@socialize/react-native-meteor#example-usage) documentation.
+
+## Basic Usage
+
+We first need to configure how presence works on the server. This part won't work in React Native code, so you won't find React Native specific code here.
 
 ```javascript
 import { Meteor } from 'meteor/meteor';
@@ -40,6 +56,7 @@ const StatusSchema = new SimpleSchema({
 // Add the schema to the existing schema currently attached to the User model
 User.attachSchema(StatusSchema);
 
+// If `sessionIds` is undefined this signifies we need a fresh start.
 // When a full cleanup is necessary we will unset the status field to show all users as offline
 UserPresence.onCleanup(function onCleanup(sessionIds) {
     if (!sessionIds) {
@@ -64,7 +81,7 @@ UserPresence.onUserOffline(function onUserOffline(userId) {
 ```
 
 
-## Server API ##
+## Server API
 
 The server side API consists of methods which register callbacks to run when a users presence changes. A user is considered online if any session is set to online, idle if all sessions are set to idle, or offline if there are no current sessions for the user.
 
@@ -116,9 +133,14 @@ UserPresence.onUserOffline(function (userId) {
 });
 ```
 
-## User Extensions ##
+## User Extensions
 
-This package provides some extensions onto the User class which comes with socialize:user-model for your convenience.
+This package provides some extensions onto the User class which comes with socialize:user-model for your convenience. These methods are included in the React Native code and so if using this package in React Native, you'll need to import the package for it to properly extend the `User` class with these methods.
+
+```javascript
+import '@socialize/user-presence';
+// Now Meteor.user() will return instances of 'User' class with these methods available
+```
 
 `User.prototype.setStatusIdle()` - Set the current logged in user for this session to idle.
 
@@ -131,3 +153,7 @@ Meteor.user().setStatusIdle();
 ```javascript
 Meteor.user().setStatusOnline();
 ```
+
+[meteor]: https://meteor.com
+[socialize]: https://atmospherejs.com/socialize
+[user-model]: https://github.com/copleykj/socialize-user-model
