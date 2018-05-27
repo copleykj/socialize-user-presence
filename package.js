@@ -2,7 +2,7 @@
 Package.describe({
     name: 'socialize:user-presence',
     summary: 'Scalable user presence',
-    version: '1.0.0',
+    version: '1.0.1',
     git: 'https://github.com/copleykj/socialize-user-presence.git',
 });
 
