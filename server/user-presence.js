@@ -4,7 +4,7 @@ import { ServerPresence } from 'meteor/socialize:server-presence';
 
 /* eslint-enable import/no-unresolved */
 
-import { UserSessions } from '../common/collection.js';
+import { UserSessions } from '../common/common.js';
 
 UserSessions._ensureIndex({ userId: 1 });
 UserSessions._ensureIndex({ serverId: 1 });
@@ -93,7 +93,7 @@ const userOffline = (userId, connection) => {
 
 export const determineStatus = (userId, connection) => {
     let status = 0;
-    const sessions = UserSessions.find({ userId }, { fields: { status: true } });
+    const sessions = UserSessions.find({ userId }, { fields: { status: 1 } });
     const sessionCount = sessions.fetch().length;
 
     if (sessionCount > 0) {

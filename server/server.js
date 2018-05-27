@@ -5,10 +5,9 @@ import { check, Match } from 'meteor/check';
 /* eslint-enable import/no-unresolved */
 
 import { determineStatus, UserPresence } from './user-presence.js';
-import { UserSessions } from '../common/collection.js';
+import { UserSessions } from '../common/common.js';
 
 import './publications.js';
-import '../common/user-extensions.js';
 
 Meteor.methods({
     updateSessionStatus(status) {
