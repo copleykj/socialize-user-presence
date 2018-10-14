@@ -4,10 +4,20 @@ This package is a simple, scalable package for keeping track of if your users ar
 
 >This is a [Meteor][meteor] package with part of it's code published as a companion NPM package made to work with React Native. This allows your Meteor and React Native projects that use this package to share code between them to give you a competitive advantage when bringing your mobile and web application to market.
 
+- [User Presence](#user-presence)
+    - [Supporting the Project](#supporting-the-project)
+    - [Meteor Installation](#meteor-installation)
+    - [React Native Installation](#react-native-installation)
+    - [Basic Usage](#basic-usage)
+    - [Server API](#server-api)
+    - [User Extensions](#user-extensions)
+
 ## Supporting the Project
 In the spirit of keeping this and all of the packages in the [Socialize][socialize] set alive, I ask that if you find this package useful, please donate to it's development.
 
-Litecoin: LXLBD9sC5dV79eQkwj7tFusUHvJA5nhuD3 / [Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
+![Litecoin](http://gdurl.com/xnOe)
+
+[Patreon](https://www.patreon.com/user?u=4866588) / [Paypal](https://www.paypal.me/copleykj)
 
 
 ## Meteor Installation
