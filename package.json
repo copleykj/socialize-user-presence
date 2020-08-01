@@ -1,6 +1,6 @@
 {
     "name": "@socialize/user-presence",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "description": "Meteor's socialize:user-presence package ported for React Native",
     "main": "entry-rn.js",
     "scripts": {
@@ -21,6 +21,6 @@
     },
     "homepage": "https://github.com/copleykj/socialize-user-presence#readme",
     "dependencies": {
-        "@socialize/user-model": "^1.0.0"
+        "@socialize/user-model": "^1.0.3"
     }
 }
