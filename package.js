@@ -9,7 +9,7 @@ Package.describe({
 Package.onUse(function _(api) {
     api.versionsFrom('1.3');
     api.use(['mongo']);
-    api.use(['socialize:server-presence@1.0.1', 'socialize:user-model@1.0.3']);
+    api.use(['socialize:server-presence@1.0.2', 'socialize:user-model@1.0.3']);
 
     api.imply('socialize:user-model');
 
