@@ -22,5 +22,19 @@
     "homepage": "https://github.com/copleykj/socialize-user-presence#readme",
     "dependencies": {
         "@socialize/user-model": "^1.0.3"
-    }
+    },
+    "funding": [
+      {
+        "type" : "github",
+        "url" : "https://github.com/sponsors/copleykj"
+      },
+      {
+        "type" : "patreon",
+        "url" : "https://www.patreon.com/copleykj"
+      },
+      {
+        "type" : "paypal",
+        "url" : "https://www.paypal.me/copleykj"
+      }
+    ]
 }
