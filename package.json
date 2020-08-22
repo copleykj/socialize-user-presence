@@ -1,11 +1,12 @@
 {
     "name": "@socialize/user-presence",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "description": "Meteor's socialize:user-presence package ported for React Native",
     "main": "entry-rn.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "publish": "meteor npm i && npm prune --production && meteor publish && meteor npm i"
+        "publish": "rimraf ./node_modules && meteor publish && meteor npm i --only=dev",
+        "publish-release": "npm publish --access public"
     },
     "repository": {
         "type": "git",
@@ -23,20 +24,23 @@
     },
     "homepage": "https://github.com/copleykj/socialize-user-presence#readme",
     "dependencies": {
-        "@socialize/user-model": "^1.0.3"
+        "@socialize/user-model": "^1.0.4"
+    },
+    "devDependencies": {
+        "rimraf": "^3.0.2"
     },
     "funding": [
-      {
-        "type" : "github",
-        "url" : "https://github.com/sponsors/copleykj"
-      },
-      {
-        "type" : "patreon",
-        "url" : "https://www.patreon.com/copleykj"
-      },
-      {
-        "type" : "paypal",
-        "url" : "https://www.paypal.me/copleykj"
-      }
+        {
+            "type": "github",
+            "url": "https://github.com/sponsors/copleykj"
+        },
+        {
+            "type": "patreon",
+            "url": "https://www.patreon.com/copleykj"
+        },
+        {
+            "type": "paypal",
+            "url": "https://www.paypal.me/copleykj"
+        }
     ]
 }
