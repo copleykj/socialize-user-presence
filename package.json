@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/copleykj/socialize-user-presence#readme",
     "dependencies": {
-        "@socialize/user-model": "^1.0.4"
+        "@socialize/user-model": "^1.0.6"
     },
     "devDependencies": {
         "rimraf": "^3.0.2"
