@@ -6,10 +6,15 @@ import { ServerPresence } from 'meteor/socialize:server-presence';
 
 import { UserSessions } from '../common/common.js';
 
-UserSessions._ensureIndex({ userId: 1 });
-UserSessions._ensureIndex({ serverId: 1 });
-UserSessions._ensureIndex({ sessionId: 1 });
-
+if (UserSessions.createIndex) {
+  UserSessions.createIndex({ userId: 1 });
+  UserSessions.createIndex({ serverId: 1 });
+  UserSessions.createIndex({ sessionId: 1 });
+} else {
+  UserSessions._ensureIndex({ userId: 1 });
+  UserSessions._ensureIndex({ serverId: 1 });
+  UserSessions._ensureIndex({ sessionId: 1 });
+}
 const cleanupFunctions = [];
 const userOnlineFunctions = [];
 const userOfflineFunctions = [];
