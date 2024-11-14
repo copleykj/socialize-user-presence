@@ -6,9 +6,13 @@ import { ServerPresence } from 'meteor/socialize:server-presence';
 
 import { UserSessions } from '../common/common.js';
 
-UserSessions._ensureIndex({ userId: 1 });
-UserSessions._ensureIndex({ serverId: 1 });
-UserSessions._ensureIndex({ sessionId: 1 });
+try {
+    UserSessions.createIndexAsync({ userId: 1 });
+    UserSessions.createIndexAsync({ serverId: 1 });
+    UserSessions.createIndexAsync({ sessionId: 1 });
+} catch (e) {
+    throw new Meteor.Error('Failed to initialize indexes for socialize:user-presence');
+}
 
 const cleanupFunctions = [];
 const userOnlineFunctions = [];
@@ -29,9 +33,9 @@ UserPresence.onSessionConnected = (sessionConnectedFunction) => {
 };
 
 export const sessionConnected = (connection, userId) => {
-    sessionConnectedFunctions.forEach((sessionFunction) => {
+    for (const sessionFunction of sessionConnectedFunctions) {
         sessionFunction(connection, userId);
-    });
+    }
 };
 
 UserPresence.onSessionDisconnected = (sessionDisconnectedFunction) => {
@@ -43,9 +47,9 @@ UserPresence.onSessionDisconnected = (sessionDisconnectedFunction) => {
 };
 
 export const sessionDisconnected = (connection, userId) => {
-    sessionDisconnectedFunctions.forEach((sessionFunction) => {
+    for (const sessionFunction of sessionDisconnectedFunctions) {
         sessionFunction(connection, userId);
-    });
+    }
 };
 
 
@@ -58,9 +62,9 @@ UserPresence.onUserOnline = (userOnlineFunction) => {
 };
 
 const userOnline = (userId, connection) => {
-    userOnlineFunctions.forEach((onlineFunction) => {
+    for (const onlineFunction of userOnlineFunctions) {
         onlineFunction(userId, connection);
-    });
+    }
 };
 
 UserPresence.onUserIdle = (userIdleFunction) => {
@@ -72,9 +76,9 @@ UserPresence.onUserIdle = (userIdleFunction) => {
 };
 
 const userIdle = (userId, connection) => {
-    userIdleFunctions.forEach((idleFunction) => {
+    for (const idleFunction of userIdleFunctions) {
         idleFunction(userId, connection);
-    });
+    }
 };
 
 UserPresence.onUserOffline = (userOfflineFunction) => {
@@ -86,23 +90,23 @@ UserPresence.onUserOffline = (userOfflineFunction) => {
 };
 
 const userOffline = (userId, connection) => {
-    userOfflineFunctions.forEach((offlineFunction) => {
+    for (const offlineFunction of userOfflineFunctions) {
         offlineFunction(userId, connection);
-    });
+    }
 };
 
-export const determineStatus = (userId, connection) => {
+export const determineStatus = async (userId, connection) => {
     let status = 0;
-    const sessions = UserSessions.find({ userId }, { fields: { status: 1 } });
-    const sessionCount = sessions.fetch().length;
+    const sessions = UserSessions.find({ userId }, { projection: { status: 1 } });
+    const sessionFull = await sessions.fetchAsync();
 
-    if (sessionCount > 0) {
+    if (sessionFull.length > 0) {
         status = 1;
-        sessions.forEach((session) => {
+        for (const session of sessionFull) {
             if (session.status === 2) {
                 status = 2;
             }
-        });
+        }
     }
 
     switch (status) {
@@ -118,14 +122,14 @@ export const determineStatus = (userId, connection) => {
     }
 };
 
-export const userConnected = (sessionId, userId, serverId, connection) => {
-    UserSessions.insert({ serverId, userId, _id: sessionId, status: 2 });
-    determineStatus(userId, connection);
+export const userConnected = async (sessionId, userId, serverId, connection) => {
+    await UserSessions.insertAsync({ serverId, userId, _id: sessionId, status: 2 });
+    await determineStatus(userId, connection);
 };
 
-export const userDisconnected = (sessionId, userId, connection) => {
-    UserSessions.remove(sessionId);
-    determineStatus(userId, connection);
+export const userDisconnected = async (sessionId, userId, connection) => {
+    await UserSessions.removeAsync(sessionId);
+    await determineStatus(userId, connection);
 };
 
 
@@ -138,20 +142,21 @@ UserPresence.onCleanup = (cleanupFunction) => {
 };
 
 const cleanup = (sessionIds) => {
-    cleanupFunctions.forEach((cleanupFunction) => {
+    for (const cleanupFunction of cleanupFunctions) {
         cleanupFunction(sessionIds);
-    });
+    };
 };
 
-ServerPresence.onCleanup((serverId) => {
+ServerPresence.onCleanup(async (serverId) => {
     if (serverId) {
-        const sessionIds = UserSessions.find({ serverId }, { fields: { userId: true } }).map((session) => {
+        const sessions = await UserSessions.find({ serverId }, { projection: { userId: true } }).fetchAsync();
+        const sessionIds = sessions.map((session) => {
             userDisconnected(session._id, session.userId, null);
             return session._id;
         });
         cleanup(sessionIds);
     } else {
         cleanup();
-        UserSessions.remove({});
+        UserSessions.removeAsync({});
     }
 });

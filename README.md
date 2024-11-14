@@ -58,7 +58,7 @@ We first need to configure how presence works on the server. This part won't wor
 import { Meteor } from 'meteor/meteor';
 import { User } from 'meteor/socialize:user-model';
 import { UserPresence } from 'meteor/socialize:user-presence';
-import SimpleSchema from 'simpl-schema';
+import SimpleSchema from 'meteor/aldeed:simple-schema';
 
 // Schema for the fields where we will store the status data
 const StatusSchema = new SimpleSchema({

@@ -10,11 +10,11 @@ import { UserSessions } from '../common/common.js';
 import './publications.js';
 
 Meteor.methods({
-    updateSessionStatus(status) {
+    async updateSessionStatus(status) {
         check(status, Match.Integer);
         if (this.userId && (status === 1 || status === 2)) {
-            UserSessions.update(this.connection.id, { $set: { status } });
-            determineStatus(this.userId);
+            await UserSessions.updateAsync(this.connection.id, { $set: { status } });
+            await determineStatus(this.userId);
         }
     },
 });
